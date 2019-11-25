@@ -82,7 +82,7 @@ public class Scene {
      */
 	public static void generateRay(final int i, final int j, final double[] offset, final Camera cam, Ray ray) {
 		
-		// TODO: Objective 1: generate rays given the provided parmeters
+		// TODO: Objective 1: generate rays given the provided parameters
 		
 	}
 

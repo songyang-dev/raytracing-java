@@ -7,7 +7,7 @@ import javax.vecmath.Vector3d;
 
 /**
  * Simple camera object, which could be extended to handle a variety of 
- * different camera settings (e.g., aperature size, lens, shutter)
+ * different camera settings (e.g., aperture size, lens, shutter)
  */
 public class Camera {
 	
