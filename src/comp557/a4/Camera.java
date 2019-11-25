@@ -38,6 +38,9 @@ public class Camera {
     /** Camera u vector, must be set by setCameraSpaceVectors() */
     public Vector3d u = new Vector3d(0,0,0);
     
+    /** Focal length, calculated later by setCameraSpaceVectors() */
+    public double focalLength;
+    
     /** Computes the w,v,u vectors */
     public void setCameraSpaceVectors() {
     	
@@ -51,6 +54,11 @@ public class Camera {
     	
     	// v = w x u
     	this.v.cross(this.w, this.u);
+    	
+    	// focal length
+    	// fovy = 2 arctan(sensor height / focal length)
+    	// focal length = sensor height / tan(fovy/2)
+    	this.focalLength = imageSize.getHeight() / Math.tan(Math.toRadians(fovy) / 2);
     }
     
     /**

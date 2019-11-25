@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 /**
  * Simple scene loader based on XML file format.
@@ -75,6 +78,9 @@ public class Scene {
         
     }
     
+    private static Vector3d dummy1 = new Vector3d();
+    private static Vector3d dummy2 = new Vector3d();
+    
     /**
      * Generate a ray through pixel (i,j).
      * 
@@ -88,10 +94,24 @@ public class Scene {
 		
 		// TODO: Objective 1: generate rays given the provided parameters
 		
-		// calculate 's' the eye point of the ray on the viewing rectangle at the given coordinates
+		// calculate 's' the eye point of the ray on the viewing rectangle at the given screen coordinates
+		// s = eye + screen_u * u + screen_v * v - focal * w
+		dummy1.scale(i + offset[0], cam.u);
+		dummy2.scale(j + offset[1], cam.v);
 		
-		// set the eye point to be the point on the viewing rectangle at the focal length
+		dummy1.add(dummy2);
 		
+		dummy2.scale(cam.focalLength, cam.w);
+		dummy1.sub(dummy2); // dummy1 = s - eye
+		
+		// calculate 'd' the direction vector
+		// d = s - eye = (eye + screen_u * u + screen_v * v - focal * w) - eye
+		// d = screen_u * u + screen_v * v - focal * w
+		
+		
+		// set the ray eye point to eye
+		// set the ray direction to d
+		ray.set(cam.from, dummy1);
 		
 	}
 
