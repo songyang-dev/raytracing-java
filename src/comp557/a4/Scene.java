@@ -21,7 +21,7 @@ public class Scene {
     /** Contains information about how to render the scene */
     public Render render;
     
-    /** The ambient light colour */
+    /** The ambient light color */
     public Color3f ambient = new Color3f();
 
     /** 
@@ -89,9 +89,9 @@ public class Scene {
 		// TODO: Objective 1: generate rays given the provided parameters
 		
 		// calculate 's' the eye point of the ray on the viewing rectangle at the given coordinates
-		Point3d s = new Point3d();
 		
 		// set the eye point to be the point on the viewing rectangle at the focal length
+		
 		
 	}
 
@@ -108,7 +108,7 @@ public class Scene {
 	 */
 	public static boolean inShadow(final IntersectResult result, final Light light, final SceneNode root, IntersectResult shadowResult, Ray shadowRay) {
 		
-		// TODO: Objective 5: check for shdows and use it in your lighting computation
+		// TODO: Objective 5: check for shadows and use it in your lighting computation
 		
 		return false;
 	}    
