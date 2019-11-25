@@ -28,7 +28,31 @@ public class Camera {
     
     /** The rendered image size */
     public Dimension imageSize = new Dimension(640,480);
-
+    
+    /** Camera w vector, must be set by setCameraSpaceVectors() */
+    public Vector3d w = new Vector3d(0,0,0);
+    
+    /** Camera v vector, must be set by setCameraSpaceVectors() */
+    public Vector3d v = new Vector3d(0,0,0);
+    
+    /** Camera u vector, must be set by setCameraSpaceVectors() */
+    public Vector3d u = new Vector3d(0,0,0);
+    
+    /** Computes the w,v,u vectors */
+    public void setCameraSpaceVectors() {
+    	
+    	// w = eye - look at, then normalize
+    	this.w.sub(this.from, this.to);
+    	this.w.normalize();
+    	
+    	// u = up X w, then normalize
+    	this.u.cross(this.up, this.w);
+    	this.u.normalize();
+    	
+    	// v = w x u
+    	this.v.cross(this.w, this.u);
+    }
+    
     /**
      * Default constructor
      */

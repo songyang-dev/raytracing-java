@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
 
 /**
  * Simple scene loader based on XML file format.
@@ -40,6 +41,9 @@ public class Scene {
         int h = cam.imageSize.height;
         
         render.init(w, h, showPanel);
+        
+        // TODO: Objective 1: prepare the camera
+        cam.setCameraSpaceVectors();
         
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
@@ -83,6 +87,11 @@ public class Scene {
 	public static void generateRay(final int i, final int j, final double[] offset, final Camera cam, Ray ray) {
 		
 		// TODO: Objective 1: generate rays given the provided parameters
+		
+		// calculate 's' the eye point of the ray on the viewing rectangle at the given coordinates
+		Point3d s = new Point3d();
+		
+		// set the eye point to be the point on the viewing rectangle at the focal length
 		
 	}
 
