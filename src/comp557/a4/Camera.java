@@ -59,8 +59,9 @@ public class Camera {
     	this.v.cross(this.w, this.u);
     	
     	// view rectangle coordinates
-    	this.l = -1;
-    	this.r = 1;
+    	double ratio = imageSize.getWidth() / imageSize.getHeight();
+    	this.l = -ratio;
+    	this.r = ratio;
     	this.b = -1;
     	this.t = 1;
     	

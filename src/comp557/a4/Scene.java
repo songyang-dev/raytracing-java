@@ -47,7 +47,7 @@ public class Scene {
         
         render.init(w, h, showPanel);
         
-        // TODO: Objective 1: prepare the camera
+        // Get camera space transformations and more ready
         cam.prepareCamera();
         
         // temporary variables
@@ -123,8 +123,8 @@ public class Scene {
 		
 		dummy1.add(dummy2);
 		
-		dummy2.scale(cam.focalLength, cam.w);
-		dummy1.sub(dummy2); // dummy1 = s - eye
+		//dummy2.scale(distance to near plane, cam.w);
+		dummy1.sub(cam.w); // dummy1 = s - eye
 		
 		// calculate 'd' the direction vector
 		// d = s - eye = (eye + screen_u * u + screen_v * v - focal * w) - eye
