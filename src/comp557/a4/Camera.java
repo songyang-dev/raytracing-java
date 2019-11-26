@@ -58,21 +58,22 @@ public class Camera {
     	// v = w x u
     	this.v.cross(this.w, this.u);
     	
-    	// focal length
-    	// fovy = 2 arctan(sensor height / focal length)
-    	// focal length = sensor height / tan(fovy/2)
-    	//this.focalLength = 0.5*imageSize.getHeight() / Math.tan(Math.toRadians(fovy) / 2);
-    	
-    	// focal length according to the look at distance
-    	Vector3d focal = new Vector3d();
-    	focal.sub(this.to, this.from);
-    	this.focalLength = focal.length();
-    	
     	// view rectangle coordinates
     	this.l = -1;
     	this.r = 1;
     	this.b = -1;
     	this.t = 1;
+    	
+    	// focal length
+    	// fovy = 2 arctan(sensor height / focal length)
+    	// focal length = sensor height / tan(fovy/2)
+    	this.focalLength = this.t / Math.tan(Math.toRadians(fovy) / 2);
+    	
+//    	// focal length according to the look at distance
+//    	Vector3d focal = new Vector3d();
+//    	focal.sub(this.to, this.from);
+//    	this.focalLength = focal.length();
+    	
     }
     
     /**
