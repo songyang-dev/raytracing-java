@@ -29,20 +29,23 @@ public class Camera {
     /** The rendered image size */
     public Dimension imageSize = new Dimension(640,480);
     
-    /** Camera w vector, must be set by setCameraSpaceVectors() */
+    /** Camera w vector, must be set by prepareCamera() */
     public Vector3d w = new Vector3d(0,0,0);
     
-    /** Camera v vector, must be set by setCameraSpaceVectors() */
+    /** Camera v vector, must be set by prepareCamera() */
     public Vector3d v = new Vector3d(0,0,0);
     
-    /** Camera u vector, must be set by setCameraSpaceVectors() */
+    /** Camera u vector, must be set by prepareCamera() */
     public Vector3d u = new Vector3d(0,0,0);
     
-    /** Focal length, calculated later by setCameraSpaceVectors() */
+    /** Focal length, calculated later by prepareCamera() */
     public double focalLength;
     
+    /** View rectangle world coordinates */
+    public double l, r, b, t;
+    
     /** Computes the w,v,u vectors */
-    public void setCameraSpaceVectors() {
+    public void prepareCamera() {
     	
     	// w = eye - look at, then normalize
     	this.w.sub(this.from, this.to);
@@ -58,7 +61,18 @@ public class Camera {
     	// focal length
     	// fovy = 2 arctan(sensor height / focal length)
     	// focal length = sensor height / tan(fovy/2)
-    	this.focalLength = 0.5*imageSize.getHeight() / Math.tan(Math.toRadians(fovy) / 2);
+    	//this.focalLength = 0.5*imageSize.getHeight() / Math.tan(Math.toRadians(fovy) / 2);
+    	
+    	// focal length according to the look at distance
+    	Vector3d focal = new Vector3d();
+    	focal.sub(this.to, this.from);
+    	this.focalLength = focal.length();
+    	
+    	// view rectangle coordinates
+    	this.l = -1;
+    	this.r = 1;
+    	this.b = -1;
+    	this.t = 1;
     }
     
     /**

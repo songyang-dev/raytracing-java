@@ -28,7 +28,7 @@ public class Scene {
     
     /** The ambient light color */
     public Color3f ambient = new Color3f();
-
+    
     /** 
      * Default constructor.
      */
@@ -48,11 +48,11 @@ public class Scene {
         render.init(w, h, showPanel);
         
         // TODO: Objective 1: prepare the camera
-        cam.setCameraSpaceVectors();
+        cam.prepareCamera();
         
         // temporary variables
         Ray ray = new Ray();
-        double[] offset = {0,0};
+        double[] offset = {0.5,0.5};
         IntersectResult result = new IntersectResult();
         
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
@@ -111,10 +111,15 @@ public class Scene {
 		
 		// TODO: Objective 1: generate rays given the provided parameters
 		
+		// turn i,j pixel coordinate into world coordinates
+		double u,v;
+		u = cam.l + (cam.r - cam.l)*(i + offset[0])/cam.imageSize.width;
+		v = cam.b + (cam.t - cam.b)*(j + offset[1])/cam.imageSize.height;
+		
 		// calculate 's' the eye point of the ray on the viewing rectangle at the given screen coordinates
 		// s = eye + screen_u * u + screen_v * v - focal * w
-		dummy1.scale(i + offset[0], cam.u);
-		dummy2.scale(j + offset[1], cam.v);
+		dummy1.scale(u, cam.u);
+		dummy2.scale(v, cam.v);
 		
 		dummy1.add(dummy2);
 		
