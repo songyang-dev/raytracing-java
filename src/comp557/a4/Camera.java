@@ -58,7 +58,7 @@ public class Camera {
     	// focal length
     	// fovy = 2 arctan(sensor height / focal length)
     	// focal length = sensor height / tan(fovy/2)
-    	this.focalLength = imageSize.getHeight() / Math.tan(Math.toRadians(fovy) / 2);
+    	this.focalLength = 0.5*imageSize.getHeight() / Math.tan(Math.toRadians(fovy) / 2);
     }
     
     /**

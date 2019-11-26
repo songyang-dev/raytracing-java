@@ -1,6 +1,7 @@
 package comp557.a4;
 
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 /**
  * A simple sphere class.
@@ -34,11 +35,39 @@ public class Sphere extends Intersectable {
     	this.material = material;
     }
     
+    /** Used for calculation */
+    private static Vector3d dummy = new Vector3d();
+    
+    /** Used for calculation */
+    private static double dot = 0;
+    
+    /** Used for calculation */
+    private static double discriminant = 0;
+    
     @Override
     public void intersect( Ray ray, IntersectResult result ) {
     
         // TODO: Objective 2: intersection of ray with sphere
-	
+    	// t = -( d dot (e-center)) +- sqrt( (d dot (e-center))^2 - (norm(e-center)^2 - radius^2))
+    	
+    	// dummy = e - center
+    	dummy.sub(ray.eyePoint, this.center);
+    	
+    	// dot = d dot (e-center)
+    	dot = ray.viewDirection.dot(dummy);
+    	
+    	// discriminant = (d dot (e-center))^2 - (norm(e-center)^2 - radius^2)
+    	discriminant = dot*dot - (dummy.lengthSquared() - this.radius*this.radius);
+    	
+    	// cases
+    	if (discriminant < 0) result.t = Double.POSITIVE_INFINITY;
+    	else if (discriminant == 0) {
+    		result.t = -dot;
+    	}
+    	// intersects two places, but only takes the smallest one
+    	else {
+    		result.t = - dot - Math.sqrt(discriminant);
+    	}
     }
     
 }

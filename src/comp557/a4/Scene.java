@@ -10,6 +10,8 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import com.sun.prism.paint.Color;
+
 /**
  * Simple scene loader based on XML file format.
  */
@@ -48,8 +50,10 @@ public class Scene {
         // TODO: Objective 1: prepare the camera
         cam.setCameraSpaceVectors();
         
+        // temporary variables
         Ray ray = new Ray();
         double[] offset = {0,0};
+        IntersectResult result = new IntersectResult();
         
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
@@ -58,19 +62,28 @@ public class Scene {
             	generateRay(i, j, offset, cam, ray);
             	
                 // TODO: Objective 2: test for intersection with scene surfaces
+            	for (Intersectable surface : surfaceList) {
+            		surface.intersect(ray, result);
+            		
+            		if (result.t != Double.POSITIVE_INFINITY)
+            			render.setPixel(i, j, Color.WHITE.getIntArgbPre());
+            		else
+            			render.setPixel(i, j, Color.BLACK.getIntArgbPre());
+            		
+            	}
             	
                 // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
                 
-            	// Here is an example of how to calculate the pixel value.
-            	Color3f c = new Color3f(render.bgcolor);
-            	int r = (int)(255*c.x);
-                int g = (int)(255*c.y);
-                int b = (int)(255*c.z);
-                int a = 255;
-                int argb = (a<<24 | r<<16 | g<<8 | b);    
-                
-                // update the render image
-                render.setPixel(i, j, argb);
+//            	// Here is an example of how to calculate the pixel value.
+//            	Color3f c = new Color3f(render.bgcolor);
+//            	int r = (int)(255*c.x);
+//                int g = (int)(255*c.y);
+//                int b = (int)(255*c.z);
+//                int a = 255;
+//                int argb = (a<<24 | r<<16 | g<<8 | b);    
+//                
+//                // update the render image
+//                render.setPixel(i, j, argb);
             }
         }
         
@@ -111,7 +124,7 @@ public class Scene {
 		// calculate 'd' the direction vector
 		// d = s - eye = (eye + screen_u * u + screen_v * v - focal * w) - eye
 		// d = screen_u * u + screen_v * v - focal * w
-		
+		dummy1.normalize();
 		
 		// set the ray eye point to eye
 		// set the ray direction to d
