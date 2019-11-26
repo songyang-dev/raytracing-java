@@ -48,10 +48,14 @@ public class Scene {
         // TODO: Objective 1: prepare the camera
         cam.setCameraSpaceVectors();
         
+        Ray ray = new Ray();
+        double[] offset = {0,0};
+        
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
             	
                 // TODO: Objective 1: generate a ray (use the generateRay method)
+            	generateRay(i, j, offset, cam, ray);
             	
                 // TODO: Objective 2: test for intersection with scene surfaces
             	
