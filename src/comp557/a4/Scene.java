@@ -123,7 +123,7 @@ public class Scene {
 		// turn i,j pixel coordinate into world coordinates
 		double u,v;
 		u = cam.l + (cam.r - cam.l)*(i + offset[0])/cam.imageSize.width;
-		v = cam.b + (cam.t - cam.b)*(j + offset[1])/cam.imageSize.height;
+		v = cam.t - (cam.t - cam.b)*(j + offset[1])/cam.imageSize.height;
 		
 		// calculate 's' the eye point of the ray on the viewing rectangle at the given screen coordinates
 		// s = eye + screen_u * u + screen_v * v - focal * w
@@ -176,9 +176,7 @@ public class Scene {
 	 */
 	public int computeShading(IntersectResult result) {
 		
-		shaded.set(result.material.diffuse.x,
-				result.material.diffuse.y,
-				result.material.diffuse.z);
+		shaded.set(0,0,0);
 		double dot = 0;
 		boolean noLight = true;
 		
@@ -188,7 +186,7 @@ public class Scene {
 			// Lambertian diffuse
 	    	// L = k * I * max(0, n dot l)
 			// assume k = 1
-			dummy1.sub(light.from, result.p);
+			dummy1.sub(light.from, result.p); // l vector
 			dummy1.normalize();
 			dot = result.n.dot(dummy1); // n dot l
 			dot = Math.max(0, dot);
@@ -204,25 +202,35 @@ public class Scene {
 			dummyColor.set(light.color.get());
 			dummyColor.scale((float) dot);
 			dummyColor.scale((float) light.power);
-			shaded.x *= dummyColor.x;
-			shaded.y *= dummyColor.y;
-			shaded.z *= dummyColor.z;
+			shaded.x += dummyColor.x * result.material.diffuse.x;
+			shaded.y += dummyColor.y * result.material.diffuse.y;
+			shaded.z += dummyColor.z * result.material.diffuse.z;
+			
 			
 			// Blinn-Phong specular
 			// h = norm(v + l)
 			// L = k * I * max(0, n dot h)^p
+			dummy2.sub(render.camera.from, result.p); // v vector
+			dummy2.normalize();
+			dummy2.add(dummy1); // v + l
+			dummy2.normalize();
+			dot = result.n.dot(dummy2);
+			dot = Math.max(0, dot);
+			dot = Math.pow(dot, result.material.shinyness);
+			
+			// add the specular
+			dummyColor.set(light.color.get());
+			dummyColor.scale((float) dot);
+			dummyColor.scale((float) light.power);
+			shaded.x += dummyColor.x * result.material.specular.x;
+			shaded.y += dummyColor.y * result.material.specular.y;
+			shaded.z += dummyColor.z * result.material.specular.z;
 		}
 		
 		// ambient lighting
-		if (noLight) {
-			shaded.x *= this.ambient.x;
-			shaded.y *= this.ambient.y; 
-			shaded.z *= this.ambient.z;
-		} else {
-			shaded.x += this.ambient.x * result.material.diffuse.x;
-			shaded.y += this.ambient.y * result.material.diffuse.y;
-			shaded.z += this.ambient.z * result.material.diffuse.z;
-		}
+		shaded.x += this.ambient.x * result.material.diffuse.x;
+		shaded.y += this.ambient.y * result.material.diffuse.y;
+		shaded.z += this.ambient.z * result.material.diffuse.z;
 		
 		
 		// max color
