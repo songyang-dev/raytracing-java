@@ -60,7 +60,10 @@ public class Sphere extends Intersectable {
     	discriminant = dot*dot - (dummy.lengthSquared() - this.radius*this.radius);
     	
     	// cases
-    	if (discriminant < 0) result.t = Double.POSITIVE_INFINITY;
+    	if (discriminant < 0) {
+    		result.t = Double.POSITIVE_INFINITY;
+    		return;
+    	}
     	else if (discriminant == 0) {
     		result.t = -dot;
     	}
@@ -68,6 +71,12 @@ public class Sphere extends Intersectable {
     	else {
     		result.t = - dot - Math.sqrt(discriminant);
     	}
+    	
+    	// track the material, normal and position
+    	result.material = this.material;
+    	ray.getPoint(result.t, result.p);
+    	result.n.sub(result.p, this.center);
+    	result.n.normalize();
     }
     
 }
