@@ -73,7 +73,6 @@ public class Scene {
             		
             		// no intersection, background color
             		if (result.t == Double.POSITIVE_INFINITY) {
-            			render.setPixel(i, j, render.bgcolor.get().getRGB());
             			continue;
             		}
             		
@@ -87,12 +86,14 @@ public class Scene {
             	
                 // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
 
-            	// skip to next ray
-            	if (tBest == Double.POSITIVE_INFINITY)
+            	// set background color, skip to next ray
+            	if (tBest == Double.POSITIVE_INFINITY) {
+            		render.setPixel(i, h-1-j, render.bgcolor.get().getRGB());
                 	continue;
-                
+            	}
+            	
             	// Shading
-            	render.setPixel(i, j, computeShading(closestIntersection));
+            	render.setPixel(i, h-1-j, computeShading(closestIntersection));
             }
         }
         
@@ -123,17 +124,17 @@ public class Scene {
 		// turn i,j pixel coordinate into world coordinates
 		double u,v;
 		u = cam.l + (cam.r - cam.l)*(i + offset[0])/cam.imageSize.width;
-		v = cam.t - (cam.t - cam.b)*(j + offset[1])/cam.imageSize.height;
+		v = cam.b + (cam.t - cam.b)*(j + offset[1])/cam.imageSize.height;
 		
 		// calculate 's' the eye point of the ray on the viewing rectangle at the given screen coordinates
-		// s = eye + screen_u * u + screen_v * v - focal * w
+		// s = eye + screen_u * u + screen_v * v - near * w
 		dummy1.scale(u, cam.u);
 		dummy2.scale(v, cam.v);
 		
 		dummy1.add(dummy2);
 		
 		//dummy2.scale(distance to near plane, cam.w);
-		dummy1.sub(cam.w); // dummy1 = s - eye
+		dummy1.sub(cam.w); // dummy1 = s - eye, near = 1
 		
 		// calculate 'd' the direction vector
 		// d = s - eye = (eye + screen_u * u + screen_v * v - focal * w) - eye
@@ -178,7 +179,6 @@ public class Scene {
 		
 		shaded.set(0,0,0);
 		double dot = 0;
-		boolean noLight = true;
 		
 		// for every light source, point lights only
 		for (Light light : this.lights.values()) {
@@ -196,7 +196,6 @@ public class Scene {
 				continue;
 			}
 			
-			noLight = false;
 			
 			// add the lambertian diffuse
 			dummyColor.set(light.color.get());

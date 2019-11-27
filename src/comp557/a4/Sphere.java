@@ -72,6 +72,12 @@ public class Sphere extends Intersectable {
     		result.t = - dot - Math.sqrt(discriminant);
     	}
     	
+    	// if t < 0, object is behind the camera
+    	if (result.t < 0) {
+    		result.t = Double.POSITIVE_INFINITY;
+    		return;
+    	}
+    	
     	// track the material, normal and position
     	result.material = this.material;
     	ray.getPoint(result.t, result.p);
