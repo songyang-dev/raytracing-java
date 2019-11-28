@@ -73,7 +73,8 @@ public class Sphere extends Intersectable {
     	}
     	
     	// if t < 0, object is behind the camera
-    	if (result.t < 0) {
+    	// if t < epsilon, self-shadowing happens
+    	if (result.t < EPSILON) {
     		result.t = Double.POSITIVE_INFINITY;
     		return;
     	}
