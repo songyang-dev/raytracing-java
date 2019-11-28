@@ -74,20 +74,25 @@ public class SceneNode extends Intersectable {
     		
     		// find the closest object
     		if (tmpResult.t < tBest) {
+    			M.transform(tmpResult.n); // into world coordinates
+    			M.transform(tmpResult.p); // into world coordinates
     			tBest = tmpResult.t;
     			result.t = tmpResult.t;
     			result.material = tmpResult.material;
-    			result.n = tmpResult.n;
-    			result.p = tmpResult.p;
+    			result.n.set(tmpResult.n);
+    			result.p.set(tmpResult.p);
     		}
         }
         if ( result.t > 1e-9 && result.t < Double.POSITIVE_INFINITY ) {
 
         	// TODO: Objective 5: do something useful here!
+        	this.material = result.material;
         	return;
         }
-        else
+        else {
         	result.t = Double.POSITIVE_INFINITY;
+        	this.material = null;
+        }
     }
     
 }
