@@ -16,10 +16,7 @@ public class Plane extends Intersectable {
 	/** The plane normal is the y direction */
 	public static final Vector3d n = new Vector3d( 0, 1, 0 );
     
-	/** A point on the plane */
-	public static final Vector3d p0 = new Vector3d(0,0,0);
-	
-    /**
+	/**
      * Default constructor
      */
     public Plane() {
@@ -47,20 +44,19 @@ public class Plane extends Intersectable {
     	}
     	
     	// get t
-    	dummy.sub(p0, ray.eyePoint);
-    	dummy.normalize();
+    	dummy.set(ray.eyePoint);
     	double dot = dummy.dot(n);
-    	result.t = dot / denom;
+    	result.t = -dot / denom;
     	
     	// if t < 0, unidirectional ray does not hit the plane
-    	if (result.t < 0) {
+    	// if t < epsilon, self-shadowing does not happen
+    	if (result.t < EPSILON) {
     		result.t = Double.POSITIVE_INFINITY;
     		return;
     	}
     	
     	// set normal and intersection
     	result.n.set(n);
-    	result.n.normalize();
     	ray.getPoint(result.t, result.p);
     	
     	// checker board pattern material

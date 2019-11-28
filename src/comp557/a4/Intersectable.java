@@ -15,6 +15,8 @@ public abstract class Intersectable {
 		this.material = new Material();
 	}
 	
+	public static final double EPSILON = 1e-6;
+	
 	/**
 	 * Test for intersection between a ray and this surface. This is an abstract
 	 *   method and must be overridden for each surface type.

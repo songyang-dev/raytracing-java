@@ -62,14 +62,32 @@ public class SceneNode extends Intersectable {
     	Minv.transform(tmpRay.viewDirection);    	
     	tmpResult.t = Double.POSITIVE_INFINITY;
     	tmpResult.n.set(0, 0, 1);
-        for ( Intersectable s : children ) {
-            s.intersect( tmpRay, tmpResult );
-        }
-        if ( tmpResult.t > 1e-9 && tmpResult.t < result.t ) {
-
-        	// TODO: do something useful here!
         
+    	double tBest = Double.POSITIVE_INFINITY;
+    	for ( Intersectable s : children ) {
+            s.intersect( tmpRay, tmpResult );
+            
+            // no intersection, background color
+    		if (tmpResult.t == Double.POSITIVE_INFINITY) {
+    			continue;
+    		}
+    		
+    		// find the closest object
+    		if (tmpResult.t < tBest) {
+    			tBest = tmpResult.t;
+    			result.t = tmpResult.t;
+    			result.material = tmpResult.material;
+    			result.n = tmpResult.n;
+    			result.p = tmpResult.p;
+    		}
         }
+        if ( result.t > 1e-9 && result.t < Double.POSITIVE_INFINITY ) {
+
+        	// TODO: Objective 5: do something useful here!
+        	return;
+        }
+        else
+        	result.t = Double.POSITIVE_INFINITY;
     }
     
 }
