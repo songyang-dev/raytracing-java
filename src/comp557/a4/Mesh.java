@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 public class Mesh extends Intersectable {
