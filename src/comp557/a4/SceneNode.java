@@ -83,10 +83,10 @@ public class SceneNode extends Intersectable {
     			result.p.set(tmpResult.p);
     		}
         }
-        if ( result.t > 1e-9 && result.t < Double.POSITIVE_INFINITY ) {
+        if ( tBest > EPSILON && tBest < Double.POSITIVE_INFINITY ) {
 
         	// TODO: Objective 5: do something useful here!
-        	this.material = result.material;
+        	//this.material = result.material;
         	return;
         }
         else {

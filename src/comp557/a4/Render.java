@@ -53,6 +53,9 @@ public class Render extends WindowAdapter {
     /** Buffered image of the render, updated as it progresses */    
     public BufferedImage image;
     
+    /** Objective 8 */
+    public boolean jitter;
+    
     /** Drawing panel */
     private ImagePanel panel;
 

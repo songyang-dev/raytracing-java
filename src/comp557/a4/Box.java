@@ -23,13 +23,51 @@ public class Box extends Intersectable {
 	public void intersect(Ray ray, IntersectResult result) {
 		// TODO: Objective 6: intersection of Ray with axis aligned box
 		
-		double tx_min = (this.min.x - ray.eyePoint.x) / ray.viewDirection.x;
-		double ty_min = (this.min.y - ray.eyePoint.y) / ray.viewDirection.y;
-		double tz_min = (this.min.z - ray.eyePoint.z) / ray.viewDirection.z;
+		double tx_min, ty_min, tz_min, tx_max, ty_max, tz_max;
 		
-		double tx_max = (this.max.x - ray.eyePoint.x) / ray.viewDirection.x;
-		double ty_max = (this.max.y - ray.eyePoint.y) / ray.viewDirection.y;
-		double tz_max = (this.max.z - ray.eyePoint.z) / ray.viewDirection.z;
+		// check for zero components
+		if (ray.viewDirection.x == 0) {
+			// check directly if the ray has origin within the x range
+			if (ray.eyePoint.x < this.min.x || ray.eyePoint.x > this.max.x) {
+				result.t = Double.POSITIVE_INFINITY;
+				return;
+			}
+			// otherwise proceed with the ray's origin x component
+			tx_min = ray.eyePoint.x;
+			tx_max = ray.eyePoint.x;
+		}
+		else {
+			tx_min = (this.min.x - ray.eyePoint.x) / ray.viewDirection.x;
+			tx_max = (this.max.x - ray.eyePoint.x) / ray.viewDirection.x;
+		}
+		
+		if (ray.viewDirection.y == 0) {
+			// similar situation for y
+			if (ray.eyePoint.y < this.min.y || ray.eyePoint.y > this.max.y) {
+				result.t = Double.POSITIVE_INFINITY;
+				return;
+			}
+			ty_min = ray.eyePoint.y;
+			ty_max = ray.eyePoint.y;
+		}
+		else {
+			ty_min = (this.min.y - ray.eyePoint.y) / ray.viewDirection.y;
+			ty_max = (this.max.y - ray.eyePoint.y) / ray.viewDirection.y;
+		}
+		
+		if (ray.viewDirection.z == 0) {
+			// similar situation for z
+			if (ray.eyePoint.z < this.min.z || ray.eyePoint.z > this.max.z) {
+				result.t = Double.POSITIVE_INFINITY;
+				return;
+			}
+			tz_min = ray.eyePoint.z;
+			tz_max = ray.eyePoint.z;
+		}
+		else {
+			tz_min = (this.min.z - ray.eyePoint.z) / ray.viewDirection.z;
+			tz_max = (this.max.z - ray.eyePoint.z) / ray.viewDirection.z;
+		}
 		
 		// getting lows and highs
 		double tx_low = Math.min(tx_min, tx_max);

@@ -72,7 +72,13 @@ public class Scene {
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
             	
+            	if (j == 700 && i == 512) {
+        			System.out.println("debug");
+        		}
+            	
             	for (int sample = 0; sample < supersample.length; sample++) {
+            		
+            		
             		
             		// uniform grid offset
             		offset[0] = sample * 1.0 / supersample.length;

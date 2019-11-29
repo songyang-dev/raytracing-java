@@ -38,7 +38,7 @@ public class Plane extends Intersectable {
     	double denom = ray.viewDirection.dot(n);
     	
     	// denom is 0, there is no intersection
-    	if (denom == 0) {
+    	if (denom < EPSILON && denom > -EPSILON) {
     		result.t = Double.POSITIVE_INFINITY;
     		return;
     	}
