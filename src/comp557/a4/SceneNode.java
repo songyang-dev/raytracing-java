@@ -91,7 +91,6 @@ public class SceneNode extends Intersectable {
         }
         else {
         	result.t = Double.POSITIVE_INFINITY;
-        	this.material = null;
         }
     }
     

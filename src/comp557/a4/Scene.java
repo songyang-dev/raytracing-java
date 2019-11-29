@@ -67,7 +67,8 @@ public class Scene {
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
             	
-            	if (j == 700 && i == 512) {
+            	// debug
+            	if (j == h/2 - 15 && i == w/2) {
         			System.out.println("debug");
         		}
             	
