@@ -16,7 +16,11 @@ import com.sun.prism.paint.Color;
  */
 public class Scene {
     
-    /** List of surfaces in the scene */
+	/** If many mirror surfaces are visible, this determines how many bounces there 
+	 * can be from a mirror surface. 0 means no mirror at all. */
+    private static final int MAX_BOUNCES = 1;
+
+	/** List of surfaces in the scene */
     public List<Intersectable> surfaceList = new ArrayList<Intersectable>();
 	
 	/** All scene lights */
@@ -254,7 +258,6 @@ public class Scene {
 	}
 	
 	
-	private static final int MAX_BOUNCES = 1;
 	/**
 	 * Mirror reflection calculation
 	 * @param result
