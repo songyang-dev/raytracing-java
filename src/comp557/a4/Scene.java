@@ -61,6 +61,9 @@ public class Scene {
         // Get camera space transformations and more ready
         cam.prepareCamera();
         
+        // Prepare geometry
+        for (Intersectable surface: this.surfaceList) surface.prepare();
+        
         // Prepare threads
         // Initialize thread array
         int cores = Runtime.getRuntime().availableProcessors(); // as many threads as cores

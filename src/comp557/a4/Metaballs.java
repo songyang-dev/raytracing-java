@@ -14,5 +14,11 @@ public class Metaballs extends Intersectable {
 	public void intersect(Ray ray, IntersectResult result) {
 		
 	}
+
+	@Override
+	public void prepare() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

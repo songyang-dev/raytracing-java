@@ -26,6 +26,12 @@ public class Mesh extends Intersectable {
 	 * Depth = 1 means just a box around the mesh */
 	private int maxHierarchy = 2;
 
+	/** Number of vertices in the smallest volume */
+	private static final int SMALLEST_VOLUME_VERTICES = 1000;
+	
+	/** Preparatory computations */
+	private List<Vector3d[]> triangleEdges;
+	
 	public Mesh() {
 		
 		super();
@@ -42,8 +48,8 @@ public class Mesh extends Intersectable {
 		// only triangles!!
 		// using barycentric coordinates
 
-		Vector3d v0v1 = new Vector3d();
-		Vector3d v0v2 = new Vector3d();
+		Vector3d v0v1;
+		Vector3d v0v2;
 		Vector3d pvec = new Vector3d();
 		
 		double det, invdet, u, v, t;
@@ -58,18 +64,18 @@ public class Mesh extends Intersectable {
 		// the "return" value of t if nothing is found
 		result.t = Double.POSITIVE_INFINITY;
 		
-		for (int[] face : soup.faceList) {
-
+		for (int i = 0; i < this.soup.faceList.size(); i++) {
+			int[] face = soup.faceList.get(i);
+			
 			//3 points of triangle
 			Point3d p0 = soup.vertexList.get(face[0]).p;
-			Point3d p1 = soup.vertexList.get(face[1]).p;
-			Point3d p2 = soup.vertexList.get(face[2]).p;
-
 			
-			v0v1.sub(p1, p0); // one side of the triangle
+			// Recover from the cached edges
+			v0v1 = this.triangleEdges.get(i)[0]; // one side of the triangle
 			
-			v0v2.sub(p2, p0); // second side of the triangle
+			v0v2 = this.triangleEdges.get(i)[1]; // second side of the triangle
 
+			// compare the face orientation and the ray direction
 			pvec.cross(ray.viewDirection,v0v2);
 			det = v0v1.dot(pvec);
 
@@ -106,6 +112,34 @@ public class Mesh extends Intersectable {
 	 * and many vectors.
 	 */
 	public void prepare() {
+		
+		// initialize the array list to be the size of the face list
+		this.triangleEdges = new ArrayList<Vector3d[]>(this.soup.faceList.size());
+		
+		// Cache the triangle edges
+		for (int i = 0; i < this.soup.faceList.size(); i++) {
+			
+			int[] face = this.soup.faceList.get(i);
+			
+			//3 points of triangle
+			Point3d p0 = soup.vertexList.get(face[0]).p;
+			Point3d p1 = soup.vertexList.get(face[1]).p;
+			Point3d p2 = soup.vertexList.get(face[2]).p;
+			
+			Vector3d v0v1 = new Vector3d();
+			Vector3d v0v2 = new Vector3d();
+			// Cache these in advance
+			v0v1.sub(p1, p0); // one side of the triangle
+			v0v2.sub(p2, p0); // second side of the triangle
+			
+			// Array of the two edges
+			Vector3d[] triangle = new Vector3d[2];
+			triangle[0] = v0v1;
+			triangle[1] = v0v2;
+			
+			this.triangleEdges.add(triangle);
+		}
+		
 		// This method calculates how many divisions of a 
 		// bounding volume are needed
 		// Rule: the smallest volume contains <1000 vertices
@@ -113,7 +147,9 @@ public class Mesh extends Intersectable {
 		// Let n be the number of vertices
 		// Then, n / #volumes = 1000
 		// # volumes = 1000 / n
-		// # volumes = 8^depth - 1 
+		// # volumes = (8^depth - 1)/7
+		// depth = ceiling( log(7 #volumes + 1) / log(8) )
+		this.maxHierarchy = (int) Math.ceil(Math.log1p(7 * SMALLEST_VOLUME_VERTICES) / Math.log(8));
 	}
 	
 	/**

@@ -124,5 +124,11 @@ public class Quadric extends Intersectable {
 		
 		return leftProduct.dot(rightVec);
 	}
+
+	@Override
+	public void prepare() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

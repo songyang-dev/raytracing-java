@@ -95,5 +95,13 @@ public class SceneNode extends Intersectable {
         	result.t = Double.POSITIVE_INFINITY;
         }
     }
+
+
+
+	@Override
+	public void prepare() {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

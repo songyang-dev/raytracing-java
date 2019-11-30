@@ -18,3 +18,9 @@ Attempted bonus:
 - Multithreading:
 	The Scene.java now instantiates as many threads as there are processors.
 	The screen is split into many sections that work independently. 
+	
+- Mesh preprocessing:
+	The mesh's triangle vectors and all computed and stored in a list before
+	intersections are computed. This saves the time from recomputing the
+	triangle edges from the vertices in the polygon soup. Done by the
+	prepare() method.

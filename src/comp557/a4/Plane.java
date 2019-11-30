@@ -74,5 +74,12 @@ public class Plane extends Intersectable {
     	}
     		
     }
+
+
+	@Override
+	public void prepare() {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

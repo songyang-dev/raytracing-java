@@ -25,4 +25,5 @@ public abstract class Intersectable {
 	 */
     public abstract void intersect(Ray ray, IntersectResult result);
     
+    public abstract void prepare();
 }

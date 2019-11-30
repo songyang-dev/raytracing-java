@@ -85,5 +85,11 @@ public class Sphere extends Intersectable {
     	result.n.sub(result.p, this.center);
     	result.n.normalize();
     }
+
+	@Override
+	public void prepare() {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

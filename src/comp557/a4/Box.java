@@ -137,6 +137,12 @@ public class Box extends Intersectable {
 		}
 		
 		else System.out.println("Unexpected box intersection");
+	}
+
+	@Override
+	public void prepare() {
+		// TODO Auto-generated method stub
+		
 	}	
 
 }
