@@ -101,7 +101,7 @@ public class SceneNode extends Intersectable {
 	@Override
 	public void prepare() {
 		// TODO Auto-generated method stub
-		
+		for (Intersectable surface: children) surface.prepare();
 	}
     
 }

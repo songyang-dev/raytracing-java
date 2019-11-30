@@ -23,51 +23,31 @@ public class Box extends Intersectable {
 	public void intersect(Ray ray, IntersectResult result) {
 		// TODO: Objective 6: intersection of Ray with axis aligned box
 		
+		// check for zero components, handle these degenerate cases by approximating
+		// not sure if this is numerically stable
+		if (ray.viewDirection.x < EPSILON && ray.viewDirection.x >= 0)
+			ray.viewDirection.x = EPSILON;
+		else if (ray.viewDirection.x > -EPSILON && ray.viewDirection.x < 0)
+			ray.viewDirection.x = -EPSILON;
+		if (ray.viewDirection.y < EPSILON && ray.viewDirection.y >= 0)
+			ray.viewDirection.y = EPSILON;
+		else if ( ray.viewDirection.y > -EPSILON && ray.viewDirection.y < 0)
+			ray.viewDirection.y = -EPSILON;
+		if (ray.viewDirection.z < EPSILON && ray.viewDirection.z >= 0)
+			ray.viewDirection.z = EPSILON;
+		else if ( ray.viewDirection.z > -EPSILON && ray.viewDirection.z < 0)
+			ray.viewDirection.z = -EPSILON;
+		
 		double tx_min, ty_min, tz_min, tx_max, ty_max, tz_max;
 		
-		// check for zero components
-		if (ray.viewDirection.x == 0) {
-			// check directly if the ray has origin within the x range
-			if (ray.eyePoint.x < this.min.x || ray.eyePoint.x > this.max.x) {
-				result.t = Double.POSITIVE_INFINITY;
-				return;
-			}
-			// otherwise proceed with the ray's origin x component
-			tx_min = ray.eyePoint.x;
-			tx_max = ray.eyePoint.x;
-		}
-		else {
-			tx_min = (this.min.x - ray.eyePoint.x) / ray.viewDirection.x;
-			tx_max = (this.max.x - ray.eyePoint.x) / ray.viewDirection.x;
-		}
 		
-		if (ray.viewDirection.y == 0) {
-			// similar situation for y
-			if (ray.eyePoint.y < this.min.y || ray.eyePoint.y > this.max.y) {
-				result.t = Double.POSITIVE_INFINITY;
-				return;
-			}
-			ty_min = ray.eyePoint.y;
-			ty_max = ray.eyePoint.y;
-		}
-		else {
-			ty_min = (this.min.y - ray.eyePoint.y) / ray.viewDirection.y;
-			ty_max = (this.max.y - ray.eyePoint.y) / ray.viewDirection.y;
-		}
 		
-		if (ray.viewDirection.z == 0) {
-			// similar situation for z
-			if (ray.eyePoint.z < this.min.z || ray.eyePoint.z > this.max.z) {
-				result.t = Double.POSITIVE_INFINITY;
-				return;
-			}
-			tz_min = ray.eyePoint.z;
-			tz_max = ray.eyePoint.z;
-		}
-		else {
-			tz_min = (this.min.z - ray.eyePoint.z) / ray.viewDirection.z;
-			tz_max = (this.max.z - ray.eyePoint.z) / ray.viewDirection.z;
-		}
+		tx_min = (this.min.x - ray.eyePoint.x) / ray.viewDirection.x;
+		tx_max = (this.max.x - ray.eyePoint.x) / ray.viewDirection.x;
+		ty_min = (this.min.y - ray.eyePoint.y) / ray.viewDirection.y;
+		ty_max = (this.max.y - ray.eyePoint.y) / ray.viewDirection.y;
+		tz_min = (this.min.z - ray.eyePoint.z) / ray.viewDirection.z;
+		tz_max = (this.max.z - ray.eyePoint.z) / ray.viewDirection.z;
 		
 		// getting lows and highs
 		double tx_low = Math.min(tx_min, tx_max);
@@ -137,6 +117,39 @@ public class Box extends Intersectable {
 		}
 		
 		else System.out.println("Unexpected box intersection");
+	}
+
+	/**
+	 * Computes the intersection when the ray is degenerate
+	 * One of the booleans must be positive
+	 * @param ray Degenerate ray
+	 * @param result Where the intersection will be
+	 * @param isXZero 
+	 * @param isYZero
+	 * @param isZZero
+	 */
+	private void degenerateCases(Ray ray, IntersectResult result, 
+			boolean isXZero, boolean isYZero, boolean isZZero) {
+		// TODO Auto-generated method stub
+		
+		double tx_min, ty_min, tz_min, tx_max, ty_max, tz_max;
+		
+		if (isXZero) {
+			if (isYZero) {
+				if (isZZero) {
+					// exceptional problem
+					System.out.println("Zero direction when intersecting boxes");
+				}
+				else {
+					// dir = 0, 0, +/- 1
+					if((ray.eyePoint.x <= this.max.x && ray.eyePoint.x >= this.min.x)
+							&& (ray.eyePoint.y <= this.max.y && ray.eyePoint.y >= this.min.y)){
+						result.t = this.min.z - ray.eyePoint.z;
+						
+					}
+				}
+			}
+		}
 	}
 
 	@Override
