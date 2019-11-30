@@ -27,8 +27,6 @@ public class Quadric extends Intersectable {
 	
 	}
 	
-	private static Vector3d normalTemp = new Vector3d();
-	
 	@Override
 	public void intersect(Ray ray, IntersectResult result) {
 		
@@ -82,11 +80,23 @@ public class Quadric extends Intersectable {
     	result.n.normalize();
     	
     	// get the material
-    	result.material = this.material;
+    	// partition the 3d space into cubes and apply a checker board pattern
+    	int x = result.p.x >= 0 ? (int) result.p.x : (int) result.p.x - 1;
+    	int z = result.p.z >= 0 ? (int) result.p.z : (int) result.p.z - 1;
+    	if (Math.abs(x) % 2 == Math.abs(z) % 2) {
+    		// first material
+    		result.material = this.material;
+    	}
+    	else {
+    		// second material, if any
+    		if (this.material2 != null)
+    			result.material = this.material2;
+    		else
+    			result.material = this.material;
+    	}
 	}
 	
-	private static Vector4d leftProduct = new Vector4d();
-	private static Vector4d temp = new Vector4d();
+
 	
 	/**
 	 * Helper method to compute v^T A v, uses a static variable
@@ -96,6 +106,8 @@ public class Quadric extends Intersectable {
 	 * @return
 	 */
 	private static double mulVecMatVec(Vector4d leftVec, Matrix4d matrix, Vector4d rightVec) {
+		Vector4d leftProduct = new Vector4d();
+		Vector4d temp = new Vector4d();
 		
 		// leftVec times matrix, result is in leftProduct
 		matrix.getColumn(0, temp);

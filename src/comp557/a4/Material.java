@@ -25,7 +25,10 @@ public class Material {
     
     /** Specular hardness, or exponent, default to a reasonable value */ 
     public float shinyness = 64;
- 
+    
+    /** Mirror coefficient from 0 to 1*/
+    public Color4f mirror = new Color4f(0,0,0,0);
+    
     /**
      * Default constructor
      */

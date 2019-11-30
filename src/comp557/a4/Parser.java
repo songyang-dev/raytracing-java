@@ -294,6 +294,16 @@ public class Parser {
 	    	if ( hardnessAttr != null ) {
 	    		material.shinyness = Float.parseFloat( hardnessAttr.getNodeValue() );
 	    	}
+	    	Node mirrorAttr = dataNode.getAttributes().getNamedItem("mirror");
+	    	if ( mirrorAttr != null ) {
+	    		Scanner s = new Scanner( mirrorAttr.getNodeValue());
+	            float r = s.nextFloat();
+	            float g = s.nextFloat();
+	            float b = s.nextFloat();
+	            float a = (s.hasNextFloat() ? s.nextFloat() : 1);
+	            material.mirror.set(r,g,b,a);   
+	            s.close();
+	    	}
 		}
 		return material;
 	}

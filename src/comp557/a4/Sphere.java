@@ -34,19 +34,19 @@ public class Sphere extends Intersectable {
     	this.center = center;
     	this.material = material;
     }
-    
-    /** Used for calculation */
-    private static Vector3d dummy = new Vector3d();
-    
-    /** Used for calculation */
-    private static double dot = 0;
-    
-    /** Used for calculation */
-    private static double discriminant = 0;
+
     
     @Override
     public void intersect( Ray ray, IntersectResult result ) {
-    
+        /** Used for calculation */
+        Vector3d dummy = new Vector3d();
+        
+        /** Used for calculation */
+        double dot = 0;
+        
+        /** Used for calculation */
+        double discriminant = 0;
+        
         // TODO: Objective 2: intersection of ray with sphere
     	// t = -( d dot (e-center)) +- sqrt( (d dot (e-center))^2 - (norm(e-center)^2 - radius^2))
     	

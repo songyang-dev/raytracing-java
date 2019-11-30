@@ -23,11 +23,10 @@ public class Plane extends Intersectable {
     	super();
     }
 
-    private static Vector3d dummy = new Vector3d();
     
     @Override
     public void intersect( Ray ray, IntersectResult result ) {
-    
+    	Vector3d dummy = new Vector3d();
         // TODO: Objective 4: intersection of ray with plane
     	
     	// plane equation (x - p0) dot normal = 0

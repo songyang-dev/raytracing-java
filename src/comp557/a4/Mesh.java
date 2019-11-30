@@ -101,12 +101,6 @@ public class Mesh extends Intersectable {
 		// If no face is intersected, no intersection
 		result.t = Double.POSITIVE_INFINITY;
 	}
-
-	// temporary variables
-	private static Vector3d temp = new Vector3d();
-	private static Vector3d aToX = new Vector3d();
-	private static Vector3d bToX = new Vector3d();
-	private static Vector3d cToX = new Vector3d();
 	
 	/** 
 	 * According to the slide 21-23 in ray tracing
@@ -118,6 +112,11 @@ public class Mesh extends Intersectable {
 	 */
 	private boolean intersectRayTriangle(Ray ray, int[] face, Vector3d[] triangle,
 			Vector3d normal, IntersectResult result) {
+		// temporary variables
+		Vector3d temp = new Vector3d();
+		Vector3d aToX = new Vector3d();
+		Vector3d bToX = new Vector3d();
+		Vector3d cToX = new Vector3d();
 		
 		// get the t that intersects the plane
 		double nom, denom;
