@@ -57,77 +57,20 @@ public class Scene {
         // Get camera space transformations and more ready
         cam.prepareCamera();
         
-        // temporary variables
-        Ray ray = new Ray();
-        double[] offset = {0.5,0.5}; // for supersampling
-        IntersectResult result = new IntersectResult();
-        IntersectResult closestIntersection;
-        double tBest;
-        Color3f dummyColor = new Color3f(0,0,0);
+        // Prepare threads
+        // Initialize thread array
+        int cores = Runtime.getRuntime().availableProcessors(); // as many threads as cores
+        //int cores = 4;
+        RunnableRayTracer[] threads = new RunnableRayTracer[cores];
         
-        // supersampling
-        Color3f[] supersample = new Color3f[render.samples];
-        
-        for ( int j = 0; j < h && !render.isDone(); j++ ) {
-            for ( int i = 0; i < w && !render.isDone(); i++ ) {
-            	
-            	// debug
-            	if (j == h/2 - 100 && i == w/2 - 15) {
-        			System.out.println("debug");
-        		}
-            	
-            	for (int sample = 0; sample < supersample.length; sample++) {
-            		
-            		
-            		
-            		// uniform grid offset
-            		offset[0] = sample * 1.0 / supersample.length;
-            		offset[1] = sample * 1.0 / supersample.length;
-	            	
-	                // TODO: Objective 1: generate a ray (use the generateRay method)
-	            	generateRay(i, j, offset, cam, ray);
-	            	
-	                // TODO: Objective 2: test for intersection with scene surfaces
-	            	tBest = Double.POSITIVE_INFINITY;
-	            	closestIntersection = null;
-	            	
-	            	for (Intersectable surface : surfaceList) {
-	            		surface.intersect(ray, result);
-	            		
-	            		// no intersection, background color
-	            		if (result.t == Double.POSITIVE_INFINITY) {
-	            			continue;
-	            		}
-	            		
-	            		// find the closest object
-	            		if (result.t < tBest) {
-	            			tBest = result.t;
-	            			closestIntersection = new IntersectResult(result);
-	            		}
-	            		
-	            	}
-	            	
-	                // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
-	
-	            	// set background color, skip to next ray
-	            	if (tBest == Double.POSITIVE_INFINITY) {
-	            		supersample[sample] = render.bgcolor;
-	                	continue;
-	            	}
-	            	
-	            	// Shading
-	            	supersample[sample] = computeShading(closestIntersection, 0);
-	            	
-            	}
-            	
-            	// TODO: Objective 8: Supersampling
-            	// take the average of all colors
-            	dummyColor.set(0,0,0);
-            	for (Color3f color : supersample) dummyColor.add(color);
-            	dummyColor.scale((float) (1.0 / supersample.length));
-            	render.setPixel(i, h-1-j, dummyColor.get().getRGB());
-            }
+        // Partition the work to the threads
+        // simply partition according to the vertical pixel coordinate
+        for(int i = 0; i < cores; i++) {
+        	threads[i] = new RunnableRayTracer(0, w, i*h/cores, (i+1)*h/cores, this);
         }
+        
+        // Start threads
+        for (RunnableRayTracer r: threads) r.start();
         
         // save the final render image
         render.save();
