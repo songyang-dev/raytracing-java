@@ -79,12 +79,13 @@ public class Scene {
         // Start threads
         for (RunnableRayTracer r: threads) r.start();
         
-        // save the final render image
-        render.save();
+       
         
         // wait for render viewer to close
         render.waitDone();
         
+        // save the final render image
+        render.save();
     }
     
     /**

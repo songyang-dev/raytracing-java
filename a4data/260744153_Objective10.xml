@@ -14,7 +14,7 @@
 	<material name="brown" diffuse="0.6 0.2 0.2"
 		specular="0.5 0.5 0.5" hardness="32" />
 	<material name="gold" diffuse=".7 .7 0" specular="1 1 1"
-		hardness="64" mirror="0.01 0.01 0.01"/>
+		hardness="64"/>
 
 	<!-- render configuration -->
 	<render bgcolor="0 0 0" output="myScene_objective10.png"
