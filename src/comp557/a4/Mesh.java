@@ -332,8 +332,26 @@ public class Mesh extends Intersectable {
 		
 		// Final case
 		if (depth + 1 == this.maxHierarchy) {
-			// Associate the corresponding 
-			for (BoundVolume child : parent.volumes) associate(child);
+			// Associate the corresponding faces to the volume
+			
+			// Multithreading
+			int cores = 8; // number of subvolumes
+			ExecutorService service = Executors.newFixedThreadPool(cores);
+			
+	        List<CallableVolumeAssociater> futureList = new ArrayList<CallableVolumeAssociater>();
+	        for ( int i=0; i<cores; i++){
+	            CallableVolumeAssociater callable = 
+	            		new CallableVolumeAssociater(parent.volumes[i], this.soup, i); 
+	            futureList.add(callable);
+	        }
+	        
+	        try{
+	            List<Future<Integer>> futures = service.invokeAll(futureList);  
+	        }catch(Exception err){
+	            err.printStackTrace();
+	        }
+	        service.shutdown();
+	        
 			return;
 		}
 		

@@ -82,6 +82,7 @@ public class SceneNode extends Intersectable {
     			result.t = tmpResult.t;
     			result.material = tmpResult.material;
     			result.n.set(tmpResult.n);
+    			result.n.normalize();
     			result.p.set(tmpResult.p);
     		}
         }

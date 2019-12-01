@@ -28,9 +28,41 @@ Attempted bonus:
 	
 - Hierarchical mesh bounding volumes:
 	Triangle meshes are now wrapped by a box-shaped bounding volume on the
-	outside. This way scene intersections don't go through every triangle.
+	outside. This way, scene intersections don't go through every triangle.
 	In addition, the mesh itself is subdivided into smaller bounding volumes
 	uniformly with 8 smaller boxes. Each sub-box may have its own smaller
 	boxes. A constant in the Mesh.java class dictates how many vertices there
 	should be per box at the most. A formula is used to determine the depth
 	of the bounding volume hierarchy. 
+	
+- Parallelized bounding volume calculation:
+	After subdividing the mesh into hierarchical volumes, every node in the
+	volume octree must be match with its own list of faces. Since there is
+	~1000 vertices per volume at most, there are 100 volumes for a 100k
+	triangle mesh. Every volume iterates through all the triangles, so
+	parallelizing the volumes iterating through the mesh is faster.
+	
+Scene descriptions:
+
+- 3HHB.xml: Unused
+- AACheckerPlane.xml: Like in the assignment guidelines. The samples can be
+	increased.
+- BoxRGBLights.xml: Like in the assignment guidelines.
+- BoxStacks.xml: Like in the assignment guidelines.
+- Bunny.xml: A small scene centered on the high resolution bunny.
+- BunnyLowRes.xml: A large scene with two spheres and a low resolution bunny
+	on a plane.
+- Cornell.xml: Unused
+- MetaBalls2.xml: Unused
+- MetaBallsPDBSmall.xml: Unused
+- Mirror.xml: A large scene of two sphere with mirror material toggled.
+- Plane.xml: Like in the assignment.
+- Plane2.xml: Like in the assignment.
+- Quadric.xml: A parabolic quadric grid of green and blue in empty space.
+- Sphere.xml: Like in the assignment.
+- TorusMesh.xml: Like in the assignment, but dimmer.
+- TwoSpheresPlane.xml: Like in the assignment.
+
+- 260744153_Objective10.xml: My own scene. I used two boxes of rose and red
+	color in the background. In the side, there is a rose reflective sphere.
+	At the center of the image is the high resolution bunny with a gold material.

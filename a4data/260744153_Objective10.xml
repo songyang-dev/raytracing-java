@@ -1,34 +1,54 @@
 <?xml version="1.0"?>
 <scene ambient="0.2 0.2 0.2">
-  <!-- define camera,material,lights here -->
-  <light name="myLight" color="0.8 0.8 0.8" from="10 10 10 " power="1.0" type="point" />
-  <light name="myLight2" color="0.8 0.6 0.6" from="-10 10 10" power="0.6" type="point" />
-  <material name="blue" diffuse="0 0 1" specular="0.5 0.5 0.5" hardness="16" />
-  <material name="green" diffuse="0 1 0" specular="0.5 0.5 0.5" hardness="16" />
-  <material name="rose" diffuse="1 0.7 0.8" specular="1 1 1" hardness="64"/>
-  <material name="brown" diffuse="0.6 0.2 0.2" specular="0.5 0.5 0.5" hardness="32"/>
-  
-  <!-- render configuration -->
-  <render bgcolor="0 0 0" output="Plane.png" samples="1" >
-    <camera name="myCamera" from="0 2 10" to="0 0 -10" up="0 1 0" fovy="45" width="1024" height="768" />
-  </render> 
-  
-  <!-- scene objects -->
-  <node name="root">
-  	<plane>  <material ref="blue" />  <material2 ref="green" />  </plane>
-  	
-  	<sphere center="-0.75 1 1" radius="1">
-  		<material ref="brown" />
-  	</sphere>
-  	
-  	<node name="boxes" translation="-5 0 0" rotation="0 45 0">
-  		<box min="0 0 0" max="2 5 1">
-  			<material ref="rose" />
-  		</box>
-  		<box min="3 4 4" max="5 5 5">
-  			<material ref="rose" />
-  		</box>
-  		
-  	</node>
-  </node>
+	<!-- define camera,material,lights here -->
+	<light name="myLight" color="0.8 0.8 0.8" from="10 10 10 "
+		power="1.0" type="point" />
+	<light name="myLight2" color="0.8 0.6 0.6" from="-10 10 10"
+		power="0.6" type="point" />
+	<material name="blue" diffuse="0 0 1" specular="0.5 0.5 0.5"
+		hardness="16" />
+	<material name="green" diffuse="0 1 0" specular="0.5 0.5 0.5"
+		hardness="16" />
+	<material name="rose" diffuse="1 0.7 0.8" specular="1 1 1"
+		hardness="64" mirror="0.1 0.1 0.1" />
+	<material name="brown" diffuse="0.6 0.2 0.2"
+		specular="0.5 0.5 0.5" hardness="32" />
+	<material name="gold" diffuse=".7 .7 0" specular="1 1 1"
+		hardness="64" mirror="0.01 0.01 0.01"/>
+
+	<!-- render configuration -->
+	<render bgcolor="0 0 0" output="myScene_objective10.png"
+		samples="1">
+		<camera name="myCamera" from="0 2 10" to="0 0 -10" up="0 1 0"
+			fovy="45" width="768" height="512" />
+	</render>
+
+	<!-- scene objects -->
+	<plane coeffs="0 1 0 0">
+		<material ref="green" />
+		<material2 ref="blue" />
+	</plane>
+	<node name="objects">
+
+		<sphere center="3 1 5" radius="1">
+			<material ref="rose" />
+		</sphere>
+
+		<node name="boxes" rotation="0 30 0" translation="-5 0 0">
+			<box min="0 0 0" max="3 7 2">
+				<material ref="rose" />
+			</box>
+
+			<box min="5 0 0" max="6 5 2">
+				<material ref="brown" />
+			</box>
+		</node>
+
+		<node name="meshes" translation="0 1 5">
+			<mesh name="bunny" filename="a4data/bunny.obj">
+				<material ref="gold" />
+			</mesh>
+		</node>
+
+	</node>
 </scene>
