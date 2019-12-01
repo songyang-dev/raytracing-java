@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -33,8 +37,8 @@ public class Mesh extends Intersectable {
 	/** Number of vertices in the smallest volume */
 	private static final int SMALLEST_VOLUME_VERTICES = 1000;
 	
-	/** Preparatory computations */
-	private List<Vector3d[]> triangleEdges;
+	/** Preparatory computations, array of edge pairs that make up a triangle */
+	private Vector3d[][] triangleEdges;
 
 	/** Bounding volume of the mesh */
 	private BoundVolume boundVolume;
@@ -93,9 +97,9 @@ public class Mesh extends Intersectable {
 			Point3d p0 = soup.vertexList.get(face[0]).p;
 			
 			// Recover from the cached edges
-			v0v1 = this.triangleEdges.get(i)[0]; // one side of the triangle
+			v0v1 = this.triangleEdges[i][0]; // one side of the triangle
 			
-			v0v2 = this.triangleEdges.get(i)[1]; // second side of the triangle
+			v0v2 = this.triangleEdges[i][1]; // second side of the triangle
 
 			// compare the face orientation and the ray direction
 			pvec.cross(ray.viewDirection,v0v2);
@@ -168,32 +172,33 @@ public class Mesh extends Intersectable {
 	public void prepare() {
 		
 		// initialize the array list to be the size of the face list
-		this.triangleEdges = new ArrayList<Vector3d[]>(this.soup.faceList.size());
+		this.triangleEdges = new Vector3d[this.soup.faceList.size()][2];
 		
 		// Cache the triangle edges
-		for (int i = 0; i < this.soup.faceList.size(); i++) {
-			
-			int[] face = this.soup.faceList.get(i);
-			
-			//3 points of triangle
-			Point3d p0 = soup.vertexList.get(face[0]).p;
-			Point3d p1 = soup.vertexList.get(face[1]).p;
-			Point3d p2 = soup.vertexList.get(face[2]).p;
-			
-			Vector3d v0v1 = new Vector3d();
-			Vector3d v0v2 = new Vector3d();
-			// Cache these in advance
-			v0v1.sub(p1, p0); // one side of the triangle
-			v0v2.sub(p2, p0); // second side of the triangle
-			
-			// Array of the two edges
-			Vector3d[] triangle = new Vector3d[2];
-			triangle[0] = v0v1;
-			triangle[1] = v0v2;
-			
-			this.triangleEdges.add(triangle);
-		}
+		// multithreading
+		int cores = Runtime.getRuntime().availableProcessors();
 		
+		ExecutorService service = Executors.newFixedThreadPool(cores);
+		
+        List<CallableTriangleFinder> futureList = new ArrayList<CallableTriangleFinder>();
+        for ( int i=0; i<cores; i++){
+            CallableTriangleFinder runnable = new CallableTriangleFinder(i*this.triangleEdges.length/cores,
+					(i+1)*this.soup.faceList.size()/cores,
+					this.soup,
+					this.triangleEdges);
+            futureList.add(runnable);
+        }
+        System.out.println("Start mesh triangle pre-processing");
+        try{
+            List<Future<Integer>> futures = service.invokeAll(futureList);  
+        }catch(Exception err){
+            err.printStackTrace();
+        }
+        System.out.println("Completed mesh triangle pre-processing");
+        service.shutdown();
+		
+        // Bounding volumes
+        
 		// This method calculates how many divisions of a 
 		// bounding volume are needed
 		// Rule: the smallest volume contains <1000 vertices
@@ -368,6 +373,7 @@ public class Mesh extends Intersectable {
 					) {
 					// the point is inside the volume
 					faces.add(index);
+					break;
 				}
 			}
 		}

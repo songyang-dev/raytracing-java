@@ -110,7 +110,7 @@ public class RunnableRayTracer implements Runnable {
 		System.out.println("Thread of " + j_min + " to " + j_max);
 		
 		if (thread == null) {
-			thread = new Thread(this);
+			thread = new Thread(this, "Thread of " + j_min + " to " + j_max);
 			thread.start();
 		}
 	}

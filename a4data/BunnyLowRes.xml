@@ -1,26 +1,44 @@
 <?xml version="1.0"?>
-<scene ambient="0.1 0.1 0.1 1.0">
-  <light name="myLight2" color="1 1 1" from="0 10 0 " power="0.5" type="point" />
+<scene ambient="0.2 0.2 0.2">
+	<!-- define camera,material,lights here -->
+	<light name="myLight" color="0.8 0.2 0.2" from="10 5 10 "
+		power="0.6" type="point" />
+	<light name="myLight2" color="0.8 0.8 0.8" from="-10 10 2 "
+		power="0.9" type="point" />
+	<material name="red" diffuse="1 0 0" specular="0.5 0.5 0.5"
+		hardness="50" />
+	<material name="green" diffuse="0 1 0" specular="0.5 0.5 0.5"
+		hardness="16" />
+	<material name="blue" diffuse="0 0 1" specular="0.5 0.5 0.5"
+		hardness="16" />
+	<material name="black" diffuse="0 0 0" specular="0 0 0"
+		hardness="0" />
+	<material name="white" diffuse="1 1 1" specular="0 0 0"
+		hardness="0" />
 
-  <material name="blue" diffuse="0 0 1" specular="0.5 0.5 0.5" hardness="16" />
-  <material name="red" diffuse="1 0 0" specular="0.5 0.5 0.5" hardness="16" />
-  <material name="green" diffuse="0 1 0" specular="0.5 0.5 0.5" hardness="16" />
-  
-  <!-- render configuration -->
-  <render bgcolor="0 0 0" output="BunnyLowRes.png" >
-      <camera name="myCamera" from="0 4 4" to="0 0 0" up="0 1 0" fovy="45" width="256" height="256" />
-  </render> 
-  
-  <node name="root" >
-    <mesh name="myTorus" filename="a4data/bunnyLowRes.obj" >
-      <material ref="red" />
-    </mesh>
-  </node>
-  <node name="plane" translation="0 -1 0">
-  	<plane>
-      <material ref="blue" />
-      <material2 ref="green" />
-    </plane>
-  </node>    
- 
+	<!-- render configuration -->
+	<render bgcolor="0 0 0" output="BunnyLowRes.png" samples="1">
+		<camera name="myCamera" from="0 4 6" to="0 2 0" up="0 1 0"
+			fovy="45" width="640" height="480" />
+	</render>
+
+	<!-- scene objects -->
+	<node name="root">
+		<node name="meshes" translation="-2 1 3">
+			<mesh name="bunnyLowRes" filename="a4data/bunnyLowRes.obj">
+				<material ref="red" />
+			</mesh>
+		</node>
+
+		<sphere center="-1 1.1 -1" radius="1.1">
+			<material ref="red" />
+		</sphere>
+		<sphere center="0.5 0.5 -0.5" radius="0.5">
+			<material ref="blue" />
+		</sphere>
+		<plane>
+			<material ref="black" />
+			<material2 ref="white" />
+		</plane>
+	</node>
 </scene>
